@@ -14,7 +14,7 @@ public interface DtoUtils {
 	// }
 
 	public static Participants ToParticipants(CollegueDTO col) {
-		return new Participants(col.getMatricule(), col.getNom(), col.getPrenoms(), col.getPhotoUrl());
+		return new Participants(col.getMatricule(), col.getNom(), col.getPrenoms(), col.getEmail(), col.getPhotoUrl());
 	}
 
 	public static CollegueAuth toCollegueAuth(InfoParticipants info) {

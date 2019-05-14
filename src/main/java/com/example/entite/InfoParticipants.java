@@ -11,7 +11,7 @@ public class InfoParticipants {
 
 	public InfoParticipants(String nom, String motPass, String photoUrl) {
 		super();
-		this.nom = nom;
+		this.nom = nom; // its is the email
 		this.motPass = motPass;
 		this.photoUrl = photoUrl;
 	}

@@ -1,6 +1,7 @@
 package com.example.entite;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -14,8 +15,22 @@ public class Participants {
 	@Column(name = "nom")
 	private String nom;
 
+	@Embedded
+	private ScoreCard scoreCard;
+
 	public Participants() {
 
+	}
+
+	public Participants(String matricule, String nom, String prenom, String email, String photoUrl,
+			ScoreCard scoreCard) {
+		super();
+		this.matricule = matricule;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.photoUrl = photoUrl;
+		this.scoreCard = scoreCard;
 	}
 
 	public Participants(String matricule, String nom, String prenom, String photoUrl) {
@@ -26,11 +41,38 @@ public class Participants {
 		this.photoUrl = photoUrl;
 	}
 
+	/**
+	 * @return the scoreCard
+	 */
+	public ScoreCard getScoreCard() {
+		return scoreCard;
+	}
+
+	/**
+	 * @param scoreCard
+	 *            the scoreCard to set
+	 */
+	public void setScoreCard(ScoreCard scoreCard) {
+		this.scoreCard = scoreCard;
+	}
+
 	@Column(name = "prenom")
 	private String prenom;
 
+	public Participants(String matricule, String nom, String prenom, String email, String photoUrl) {
+		super();
+		this.matricule = matricule;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.email = email;
+		this.photoUrl = photoUrl;
+	}
+
+	@Column(name = "email")
+	private String email;
+
 	@Column(name = "photoUrl")
-	private String photoUrl;
+	private String photoUrl = "";
 
 	/**
 	 * @return the matricule
@@ -90,6 +132,14 @@ public class Participants {
 	 */
 	public void setPhotoUrl(String photoUrl) {
 		this.photoUrl = photoUrl;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
