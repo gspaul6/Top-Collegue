@@ -2,6 +2,7 @@ package com.example.controller;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
@@ -49,50 +50,32 @@ public class AuthentificationCtrl {
 	private RestTemplate rt;
 
 	@PostMapping(value = "/auth")
-
 	public ResponseEntity<Object> authenticate(@RequestBody InfoParticipants authenticationRequest,
 			HttpServletResponse response) throws URISyntaxException {
 
 		HttpEntity<CollegueAuth> requestEntity = new HttpEntity<CollegueAuth>(
 				DtoUtils.toCollegueAuth(authenticationRequest));
 
-		ResponseEntity<String> responseFromApi = rt.exchange("http://localhost:8080/auth", HttpMethod.POST,
-				requestEntity, String.class);
+		ResponseEntity<CollegueDTO> responseFromApi = rt.exchange("http://localhost:8080/auth", HttpMethod.POST,
+				requestEntity, CollegueDTO.class);
 		// https://Paul-collegues-api.herokuapp.com/auth
 		String responseHeader = responseFromApi.getHeaders().getFirst("Set-Cookie");
-
-		String body = responseFromApi.getBody();
+		CollegueDTO body = responseFromApi.getBody();
+		System.out.println(body.getMatricule());
+		ResponseEntity<CollegueDTO> responseEntity = rt.exchange(RequestEntity.get(new URI("http://localhost:8080/collegues/"+ body.getMatricule())).header("Cookie", responseHeader).build(), CollegueDTO.class);
+		body = responseEntity.getBody();
 
 		String[] cookie = responseHeader.split(";");
 
 		String[] cookie2 = cookie[0].split("=");
 
 		String token = cookie2[1];
-
-		Participants participants = this.serviceOfParticipants.findByEmail(authenticationRequest.getNom());
-		CollegueDTO collegue;
-		//// step to check if he exists in participants
-		if (participants != null) {
-			System.out.println("participant exist");
+		if (authenticationRequest.getPhotoUrl()!=null && authenticationRequest.getPhotoUrl().startsWith("http") && authenticationRequest.getPhotoUrl().length()>=7)
+		{
+		 body.setPhotoUrl(authenticationRequest.getPhotoUrl());
 		}
-		/// step :to send email and get the collegue
-		else {
 
-			if (!responseHeader.isEmpty() && responseHeader != null) {
-				RequestEntity<?> requireEntity = RequestEntity.get(new URI("http://localhost:8080/collegues/emails"))
-						// https://Paul-collegues-api.herokuapp.com/collegues/emails
-						.header("Cookie", responseFromApi.getHeaders().getFirst("Set-Cookie")).build();
-				ResponseEntity<CollegueDTO> rep2 = rt.exchange(requireEntity, CollegueDTO.class);
-				collegue = rep2.getBody();
-
-				collegue.setPhotoUrl(authenticationRequest.getPhotoUrl());
-
-				participants = this.serviceOfParticipants.saveParticipants(collegue);
-
-			}
-
-		}
-		// System.out.println(responseHeader + "\n" + body + "\n");
+		this.serviceOfParticipants.saveParticipants(body);
 
 		Cookie authCookie = new Cookie(TOKEN_COOKIE, token);
 
@@ -103,7 +86,7 @@ public class AuthentificationCtrl {
 		authCookie.setPath("/");
 
 		response.addCookie(authCookie);
-		return ResponseEntity.status(HttpStatus.OK).body(participants);
+		return ResponseEntity.status(HttpStatus.OK).body(body);
 
 	}
 

@@ -6,7 +6,7 @@ public class InfoParticipants {
 	private String photoUrl;
 
 	public InfoParticipants() {
-		super();
+		
 	}
 
 	public InfoParticipants(String nom, String motPass, String photoUrl) {

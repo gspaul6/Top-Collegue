@@ -2,8 +2,10 @@ package com.example.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,13 +46,18 @@ public class ParticipantService {
 		return participantsList;
 	}
 
-	public Participants saveParticipants(CollegueDTO collegue) {
-		return this.participantsRepository.save(DtoUtils.ToParticipants(collegue));
+	public void saveParticipants(CollegueDTO collegue) {
+		
+		Optional<Participants> participant=this.findByEmail(collegue.getEmail());
+		if(!participant.isPresent()){
+			this.participantsRepository.save(DtoUtils.ToParticipants(collegue));
+		}
+		 
 	}
 
-	public Participants findByEmail(String email) {
-		Participants currentParticipant = this.participantsRepository.findParticipantByTheirEmail(email);
-		return currentParticipant;
+	public Optional<Participants> findByEmail(String email) {
+		return this.participantsRepository.findParticipantByTheirEmail(email);
+		
 	}
 
 	@Transactional

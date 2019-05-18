@@ -51,8 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				// un GET /exemples n'est pas soumise à authentification
 
-				.antMatchers("/h2-console/**").permitAll().antMatchers("/auth").permitAll().antMatchers("/me")
-				.hasRole("USER")
+				.antMatchers("/h2-console/**").permitAll()
+				.antMatchers("/auth").permitAll()
+				
 				// Les autres requêtes sont soumises à authentification
 				.anyRequest().authenticated()
 
