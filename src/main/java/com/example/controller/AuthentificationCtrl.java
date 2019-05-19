@@ -25,6 +25,7 @@ import com.example.entite.CollegueAuth;
 import com.example.entite.CollegueDTO;
 import com.example.entite.InfoParticipants;
 import com.example.entite.Participants;
+import com.example.entite.ScoreCard;
 import com.example.service.ParticipantService;
 import com.example.utls.DtoUtils;
 
@@ -61,7 +62,7 @@ public class AuthentificationCtrl {
 		// https://Paul-collegues-api.herokuapp.com/auth
 		String responseHeader = responseFromApi.getHeaders().getFirst("Set-Cookie");
 		CollegueDTO body = responseFromApi.getBody();
-		System.out.println(body.getMatricule());
+		//System.out.println(body.getMatricule());
 		ResponseEntity<CollegueDTO> responseEntity = rt.exchange(RequestEntity.get(new URI("http://localhost:8080/collegues/"+ body.getMatricule())).header("Cookie", responseHeader).build(), CollegueDTO.class);
 		body = responseEntity.getBody();
 
@@ -76,7 +77,16 @@ public class AuthentificationCtrl {
 		}
 
 		this.serviceOfParticipants.saveParticipants(body);
-
+        Optional<Participants> participant = this.serviceOfParticipants.findByEmail(body.getEmail());
+        Participants participantBdo = new Participants();
+        participantBdo = participant.get();
+        if (participantBdo.getScoreCard() == null) {
+			participantBdo.setScoreCard(new ScoreCard());
+			participantBdo.getScoreCard().setLikes(participantBdo.getScoreCard().getLikes() + 0);
+			participantBdo.getScoreCard().setLikes(participantBdo.getScoreCard().getLikes() + 0);
+			participantBdo.getScoreCard()
+					.setScore((participantBdo.getScoreCard().getScore()+ 0));
+		}
 		Cookie authCookie = new Cookie(TOKEN_COOKIE, token);
 
 		authCookie.setHttpOnly(true);
@@ -86,7 +96,7 @@ public class AuthentificationCtrl {
 		authCookie.setPath("/");
 
 		response.addCookie(authCookie);
-		return ResponseEntity.status(HttpStatus.OK).body(body);
+		return ResponseEntity.status(HttpStatus.OK).body(participantBdo);
 
 	}
 

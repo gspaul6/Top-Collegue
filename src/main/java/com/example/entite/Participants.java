@@ -24,7 +24,7 @@ public class Participants {
 
 	public Participants(String matricule, String nom, String prenom, String email, String photoUrl,
 			ScoreCard scoreCard) {
-		super();
+		
 		this.matricule = matricule;
 		this.nom = nom;
 		this.prenom = prenom;
@@ -34,7 +34,7 @@ public class Participants {
 	}
 
 	public Participants(String matricule, String nom, String prenom, String photoUrl) {
-		super();
+		
 		this.matricule = matricule;
 		this.nom = nom;
 		this.prenom = prenom;
@@ -60,7 +60,7 @@ public class Participants {
 	private String prenom;
 
 	public Participants(String matricule, String nom, String prenom, String email, String photoUrl) {
-		super();
+		
 		this.matricule = matricule;
 		this.nom = nom;
 		this.prenom = prenom;
