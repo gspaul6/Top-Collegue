@@ -46,6 +46,7 @@ public class ParticipantController {
 		Participants participant = this.participantService.addDislikes(petit.getMatricule(), petit.getLike());
 
 		return ResponseEntity.status(HttpStatus.OK).body(participant);
+
 	}
 
 	@GetMapping(value = "/score")
